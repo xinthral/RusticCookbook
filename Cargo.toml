@@ -1,0 +1,14 @@
+[package]
+name = "cookbook"
+version = "0.0.1"
+edition = "2024"
+description = "Cookbook Demo to learn Rust"
+license = "MIT"
+
+[dependencies]
+rusqlite = { version = "0.29", features = ["bundled"] }  # For DB operations
+csv = "1.2"  # For reading CSV files
+
+[dev-dependencies]
+
+[features]
