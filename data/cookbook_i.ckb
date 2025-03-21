@@ -1,6 +1,110 @@
 name,category
 Chicken,Meat
+Beef,Meat
+Pork,Meat
+Turkey,Meat
+Venison,Meat
+Walleye,Fish
+Perch,Fish
+Salmon,Fish
+Whitefish,Fish
+Smelt,Fish
 Rice,Grain
+Wild Rice,Grain
 Garlic,Vegetable
+Onion,Vegetable
+Potato,Vegetable
+Sweet Corn,Vegetable
+Carrots,Vegetable
+Celery,Vegetable
+Tomato,Vegetable
+Green Beans,Vegetable
+Cabbage,Vegetable
+Beets,Vegetable
+Pumpkin,Vegetable
+Squash,Vegetable
+Zucchini,Vegetable
+Mushrooms,Vegetable
 Pasta,Grain
+Macaroni,Grain
+Bread,Grain
+Cornmeal,Grain
+Oats,Grain
+Wheat Flour,Grain
+Barley,Grain
+Maple Syrup,Sweetener
+Honey,Sweetener
+Molasses,Sweetener
+Apples,Fruit
+Cherries,Fruit
+Blueberries,Fruit
+Strawberries,Fruit
+Raspberries,Fruit
+Cranberries,Fruit
+Rhubarb,Fruit
+Peaches,Fruit
+Pears,Fruit
+Plums,Fruit
 Cheese,Dairy
+Butter,Dairy
+Milk,Dairy
+Sour Cream,Dairy
+Heavy Cream,Dairy
+Yogurt,Dairy
+Eggs,Dairy
+Bacon,Meat
+Sausage,Meat
+Ham,Meat
+Lard,Fat
+Crisco,Fat
+Vegetable Oil,Fat
+Olive Oil,Fat
+Pickles,Condiment
+Mustard,Condiment
+Ketchup,Condiment
+Mayonnaise,Condiment
+BBQ Sauce,Condiment
+Horseradish,Condiment
+Vinegar,Condiment
+Soy Sauce,Condiment
+Worcestershire Sauce,Condiment
+Hot Sauce,Condiment
+Salt,Seasoning
+Black Pepper,Seasoning
+Garlic Powder,Seasoning
+Onion Powder,Seasoning
+Paprika,Seasoning
+Cinnamon,Seasoning
+Nutmeg,Seasoning
+Allspice,Seasoning
+Cloves,Seasoning
+Bay Leaves,Seasoning
+Basil,Herb
+Oregano,Herb
+Thyme,Herb
+Rosemary,Herb
+Sage,Herb
+Parsley,Herb
+Dill,Herb
+Cilantro,Herb
+Mint,Herb
+Cumin,Seasoning
+Coriander,Seasoning
+Ginger,Seasoning
+Cardamom,Seasoning
+Fennel Seeds,Seasoning
+Mustard Seeds,Seasoning
+Chili Powder,Seasoning
+Brown Sugar,Sweetener
+White Sugar,Sweetener
+Powdered Sugar,Sweetener
+Yeast,Baking
+Baking Soda,Baking
+Baking Powder,Baking
+Chocolate,Baking
+Cocoa Powder,Baking
+Walnuts,Nuts
+Almonds,Nuts
+Pecans,Nuts
+Peanuts,Nuts
+Sunflower Seeds,Nuts
