@@ -1,19 +1,37 @@
-use crate::recipes::Recipe;
-use std::fs;
-use std::io::{self, Write};
+pub mod ingredients;
+use ingredients::Ingredient;
+pub mod recipes;
+use recipes::Recipe;
+pub mod queries;
+// use queries::{IngredientQuery, RecipeQuery};
+pub mod registrar;
+
+use std::path::PathBuf;
+
+// use queries::SQLiteHandler;
 
 pub struct Cookbook {
-  pub file_path: String,
-  pub file_name: String,
-  pub recipes: Vec<Recipe>,
+  pub data_path:        PathBuf,
+  pub cookbook_name:    String,
+  pub ingredient_book:  String,
+  pub recipe_book:      String,
+  pub database_name:    String,
+  pub ingredients:      Vec<Ingredient>,
+  pub recipes:          Vec<Recipe>,
+  pub registrar:        registrar::Registry,
 }
 
 impl Cookbook {
-  pub fn new(file_path: &str, file_name: &str) -> Self {
+  pub fn new(data_path: &PathBuf, cookbook_name: &str, ingredient_book: &str, recipe_book: &str, database_name: &str) -> Self {
     Self {
-      file_path: file_path.to_string(),
-      file_name: file_name.to_string(),
-      recipes: Vec::new(),
+      data_path:        data_path.clone(),
+      cookbook_name:    cookbook_name.to_string(),
+      database_name:    database_name.to_string(),
+      ingredient_book:  ingredient_book.to_string(),
+      recipe_book:      recipe_book.to_string(),
+      ingredients:      Vec::new(),
+      recipes:          Vec::new(),
+      registrar:        registrar::Registry::new(),
     }
   }
 
@@ -31,24 +49,5 @@ impl Cookbook {
     }
   }
 
-  pub fn save_to_file(&self) -> io::Result<()> {
-    let file_path = format!("{}/{}", self.file_path, self.file_name);
-    let content = self.recipes
-      .iter()
-      .map(|r| r.display())
-      .collect::<Vec<_>>()
-      .join("\n\n");
 
-    fs::write(&file_path, content)?;
-    println!("Cookbook saved to {}", file_path);
-    Ok(())
-  }
-
-  pub fn load_from_file(&mut self) -> io::Result<()> {
-    let file_path = format!("{}/{}", self.file_path, self.file_name);
-    let contents = fs::read_to_string(&file_path)?;
-
-    println!("Loaded Cookbook Contents:\n{}", contents);
-    Ok(())
-  }
 }

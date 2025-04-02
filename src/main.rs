@@ -1,54 +1,27 @@
-mod cookbook;
-mod ingredients;
-mod recipes;
-mod sqlite_handler;
-
+pub mod cookbook;
+pub mod utilz;
 use cookbook::Cookbook;
-use ingredients::Ingredient;
-use recipes::Recipe;
-use sqlite_handler::SQLiteHandler;
-use std::fs;
+use std::path::PathBuf;
+use std::env;
 
 fn main() {
   println!("\n##### Cookbook Begins! #####");
 
-  let filepath = "/pond/Github/xTesting/rustic/cookbook/data".to_string();
-  let filename = "testbook.ckb".to_string();
-  let fullfile = format!("{}/{}", filepath, filename);
-  println!("Checking File: {fullfile}");
+  let mut data_path:        PathBuf = env::current_dir().expect("Failed to get current directory");
+  data_path.push("data");
 
-  let _ = fs::read_to_string(&fullfile).unwrap_or_else(|_| {
-    println!("File not found. Creating an empty cookbook...");
-    "".to_string()
-  });
+  println!("Data Path: {}", data_path.display());
 
-  let chicken = Ingredient::new("Chicken", "Meat");
-  let rice = Ingredient::new("Rice", "Grain");
+  let cookbook_name:        String  = String::from("testbook.ckb");
+  let cookbook_ingredients: String  = String::from("cookbook_i.ckb");
+  let cookbook_recipes:     String  = String::from("cookbook_r.ckb");
+  let database_name:        String  = String::from(":memory:");
 
-  let chow_recipe = Recipe::new("Chicken Fried Rice", vec![chicken, rice], "Cook in a pan for 10 minutes.");
-  println!("{}", chow_recipe.display());
+  let cookbook: Cookbook = Cookbook::new(&data_path, &cookbook_name, &cookbook_ingredients, &cookbook_recipes, &database_name);
+  cookbook.list_recipes();  // List recipes in the cookbook
 
-  let mut ckb = Cookbook::new(&filepath, &filename);
-  ckb.add_recipe(chow_recipe);
-  ckb.list_recipes();
-  ckb.save_to_file().expect("Failed to save the cookbook");
-
-  let db = SQLiteHandler::new("cookbook.db");
-  let ip = format!("{}/cookbook_i.ckb", filepath);
-
-  println!("Loading ingredients...");
-  db.load_ingredients(&ip).expect("Failed to load ingredients");
-
-  let rp = format!("{}/cookbook_r.ckb", filepath);
-  println!("Loading recipes...");
-  db.load_recipes(&rp).expect("Failed to load recipes");
-
-  println!("\n### Ingredients in Database ###");
-  db.get_ingredients();
-
-  println!("\n### Recipes in Database ###");
-  db.get_recipes();
-
+  let uuid: String = utilz::generate_uuid();
+  println!("Generated UUID: {}", &uuid);
 
   println!("##### Cookbook Complete! #####\n");
 }
