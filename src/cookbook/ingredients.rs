@@ -1,6 +1,8 @@
 use std::fmt;
 use std::vec::Vec;
 
+/** IngredientList */
+#[derive(Clone)]
 pub struct IngredientList(pub Vec<Ingredient>);
 impl fmt::Display for IngredientList {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -27,6 +29,8 @@ impl IngredientList {
   }
 }
 
+/** IngredientType */
+#[derive(Clone)]
 pub enum IngredientType {
   Culinary,
   Protein,
@@ -47,18 +51,22 @@ impl fmt::Display for IngredientType {
   }
 }
 
+/** Ingredient */
+#[derive(Clone)]
 pub struct Ingredient {
+  pub uuid: String,
   pub name: String,
   pub category: IngredientType,
 }
 impl fmt::Display for Ingredient {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "Ingredient: {} (Category: {})", self.name, self.category)
+    write!(f, "\nIngredient: {} (Category: {})", self.name, self.category)
   }
 }
 impl Ingredient {
-  pub fn new(name: &str, category: IngredientType) -> Self {
+  pub fn new(uuid: &str, name: &str, category: IngredientType) -> Self {
     Self {
+      uuid: uuid.to_string(),
       name: name.to_string(),
       category,
     }

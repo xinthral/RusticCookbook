@@ -35,8 +35,14 @@ impl Cookbook {
     }
   }
 
-  pub fn add_recipe(&mut self, recipe: Recipe) {
-    self.recipes.push(recipe);
+  pub fn add_recipe(&mut self, recipe: &Recipe) {
+    let cloned: Recipe = recipe.clone();
+    self.recipes.push(cloned);
+  }
+
+  pub fn add_ingredient(&mut self, ingredient: &Ingredient) {
+    let cloned: Ingredient = ingredient.clone();
+    self.ingredients.push(cloned);
   }
 
   pub fn list_recipes(&self) {
@@ -44,10 +50,19 @@ impl Cookbook {
       println!("No recipes found in the cookbook.");
     } else {
       for (i, recipe) in self.recipes.iter().enumerate() {
-        println!("{}. {}", i + 1, recipe.name);
+        println!("\n{}. {}", i + 1, recipe);
       }
     }
   }
 
+  pub fn list_ingredients(&self) {
+    if self.ingredients.is_empty() {
+      println!("No ingredients found in the cookbook.");
+    } else {
+      for (i, ingredient) in self.ingredients.iter().enumerate() {
+        println!("\n{}. {}", i + 1, ingredient);
+      }
+    }
+  } 
 
 }

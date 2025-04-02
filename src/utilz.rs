@@ -31,3 +31,7 @@ pub fn generate_uuid() -> String {
   }
   uuid
 }
+
+// pub fn timestamp() -> DateTime {
+//   Local::now()
+// }
