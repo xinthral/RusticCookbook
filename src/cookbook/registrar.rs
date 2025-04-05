@@ -15,23 +15,18 @@ impl Registry {
       recipes: RecipeList::new(),
     }
   }
-
   pub fn add_ingredient(&mut self, ingredient: Ingredient) {
     self.ingredients.add(ingredient);
   }
-
   pub fn add_recipe(&mut self, recipe: Recipe) {
     self.recipes.add(recipe);
   }
-
   pub fn display_ingredients(&self) {
     println!("{}", self.ingredients);
   }
-
   pub fn display_recipes(&self) {
     println!("{}", self.recipes);
   }
-  
   pub fn save_to_file(&self) -> Result<()> {
     // let mut file_path: PathBuf = self.file_path.clone();
     // file_path.push("data");
@@ -47,7 +42,6 @@ impl Registry {
     // println!("Cookbook saved to {}", &file_path.display());
     Ok(())
   }
-
   pub fn load_from_file(&mut self) -> Result<()> {
     // let mut file_path: PathBuf = self.file_path.clone();
     // file_path.push("data");
@@ -57,7 +51,6 @@ impl Registry {
     // println!("Loaded Cookbook Contents:\n{}", &contents);
     Ok(())
   }
-
   pub fn load_from_database(&self) -> Result<()> {
     // let mut ip: PathBuf = self.file_path.clone();
     // ip.push("data");
@@ -66,10 +59,8 @@ impl Registry {
     // println!("Loading ingredients...");
     // let db: SQLiteHandler = SQLiteHandler::new(&self.file_path);
     // db.load_ingredients(&ip.to_string_lossy()).expect("Failed to load ingredients");
-
     Ok(())
   }
-
   pub fn save_to_database(&self) -> Result<()> {
     // let db: SQLiteHandler = SQLiteHandler::new(&self.file_path);
     // let mut ip: PathBuf = self.file_path.clone();

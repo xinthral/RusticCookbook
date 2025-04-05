@@ -50,7 +50,7 @@ impl Cookbook {
       println!("No recipes found in the cookbook.");
     } else {
       for (i, recipe) in self.recipes.iter().enumerate() {
-        println!("\n{}. {}", i + 1, recipe);
+        println!("{}. {:?}", i + 1, recipe);
       }
     }
   }
@@ -60,7 +60,7 @@ impl Cookbook {
       println!("No ingredients found in the cookbook.");
     } else {
       for (i, ingredient) in self.ingredients.iter().enumerate() {
-        println!("\n{}. {}", i + 1, ingredient);
+        println!("{}. {}", i + 1, ingredient);
       }
     }
   } 

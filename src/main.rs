@@ -26,19 +26,24 @@ fn main() {
 
   let mut cookbook: Cookbook = Cookbook::new(&data_path, &cookbook_name, &cookbook_ingredients, &cookbook_recipes, &database_name);
   
-  let butter: Ingredient = Ingredient::new(&generate_uuid(), "Butter", IngredientType::Culinary);
-  let chicken: Ingredient = Ingredient::new(&generate_uuid(), "Chicken", IngredientType::Protein);
-  println!("Generated UUID: {}", butter.uuid);
+  let butter: Ingredient = Ingredient::new(&generate_uuid(), IngredientType::Culinary, "Butter");
+  let chicken: Ingredient = Ingredient::new(&generate_uuid(), IngredientType::Protein, "Chicken");
+  println!("Ingredient UUID: {}-{}", butter.name, butter.uuid);
 
   cookbook.add_ingredient(&butter);
   cookbook.add_ingredient(&chicken);
   cookbook.list_ingredients();  // List ingredients in the cookbook
 
 
-  let mut buttered_chicken: Recipe = Recipe::new(&generate_uuid(), "Buttered Chicken", "In a large skillet, sear it up.");
+  let mut buttered_chicken: Recipe = Recipe::new(&generate_uuid(), RecipeType::Culinary, "Buttered Chicken", "In a large skillet, sear it up.");
+  println!("Ingredient UUID: {}", butter.uuid);
   buttered_chicken.add_ingredient(&butter);
   buttered_chicken.add_ingredient(&chicken);
+  // buttered_chicken.display_ingredients();
+
   cookbook.add_recipe(&buttered_chicken);
+  println!("Listing Recipes: ");
   cookbook.list_recipes();  // List recipes in the cookbook
+
   println!("##### Cookbook Complete! #####\n");
 }

@@ -4,10 +4,18 @@ use std::vec::Vec;
 /** IngredientList */
 #[derive(Clone)]
 pub struct IngredientList(pub Vec<Ingredient>);
+impl fmt::Debug for IngredientList {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    for ingredient in &self.0 {
+      write!(f, "{}", ingredient)?;
+    }
+    Ok(())
+  }
+}
 impl fmt::Display for IngredientList {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     for ingredient in &self.0 {
-      write!(f, "- {}\n", ingredient)?;
+      write!(f, "{}", ingredient)?;
     }
     Ok(())
   }
@@ -41,11 +49,11 @@ pub enum IngredientType {
 impl fmt::Display for IngredientType {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     let category: String = match self {
-      IngredientType::Culinary => "Culinary".to_string(),
-      IngredientType::Protein => "Protein".to_string(),
-      IngredientType::Produce => "Produce".to_string(),
-      IngredientType::Grain => "Grain".to_string(),
-      IngredientType::Craft => "Craft".to_string(),
+      IngredientType::Culinary  => "Culinary".to_string(),
+      IngredientType::Protein   => "Protein".to_string(),
+      IngredientType::Produce   => "Produce".to_string(),
+      IngredientType::Grain     => "Grain".to_string(),
+      IngredientType::Craft     => "Craft".to_string(),
     };
     write!(f, "{}", category)
   }
@@ -54,21 +62,26 @@ impl fmt::Display for IngredientType {
 /** Ingredient */
 #[derive(Clone)]
 pub struct Ingredient {
-  pub uuid: String,
-  pub name: String,
+  pub uuid:     String,
   pub category: IngredientType,
+  pub name:     String,
+}
+impl fmt::Debug for Ingredient {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "\nIngredient: {} (Category: {})\n", self.name, self.category)
+  }
 }
 impl fmt::Display for Ingredient {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "\nIngredient: {} (Category: {})", self.name, self.category)
+    write!(f, "Ingredient: {} (Category: {})", self.name, self.category)
   }
 }
 impl Ingredient {
-  pub fn new(uuid: &str, name: &str, category: IngredientType) -> Self {
+  pub fn new(uuid: &str, category: IngredientType, name: &str) -> Self {
     Self {
-      uuid: uuid.to_string(),
-      name: name.to_string(),
+      uuid:     uuid.to_string(),
       category,
+      name:     name.to_string(),
     }
   }
 }
