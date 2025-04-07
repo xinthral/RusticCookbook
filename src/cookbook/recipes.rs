@@ -1,21 +1,21 @@
 use super::ingredients::{Ingredient, IngredientList};
-use std::fmt;
+use std::fmt::{Debug, Display, Formatter, Result};
 
 /** RecipeList */
 #[derive(Clone)]
 pub struct RecipeList(pub Vec<Recipe>);
-impl fmt::Debug for RecipeList {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Debug for RecipeList {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     for recipe in &self.0 {
-      write!(f, "{}", recipe)?;
+      write!(f, "[{:width$}] {} :: {}\n", recipe.uuid, recipe.name, recipe.instructions, width=35)?;
     }
     Ok(())
   }
 }
-impl fmt::Display for RecipeList {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Display for RecipeList {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     for recipe in &self.0 {
-      write!(f, "{}", recipe)?;
+      write!(f, "{}", recipe.name)?;
     }
     Ok(())
   }
@@ -38,21 +38,41 @@ impl RecipeList {
 }
 
 /** RecipeType */
-#[derive(Clone)]
-pub enum RecipeType {
-  Culinary,
-  Crafted,
+macro_rules! recipe_types {
+  ($($variant:ident => $name:expr),*) => {
+    #[derive(Clone, Debug, PartialEq, Eq)]
+    pub enum RecipeType {
+      $($variant),*
+    }
+    impl Display for RecipeType {
+      fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "{}", self.as_str())
+      }
+    }
+    impl RecipeType {
+      pub fn as_str(&self) -> &'static str {
+        match self {
+          $(RecipeType::$variant => $name),*
+        }
+      }
+      pub fn from_str(name: &str) -> Option<Self> {
+        match name {
+          $(x if x.eq_ignore_ascii_case($name) => Some(RecipeType::$variant)),*,
+          _ => None,
+        }
+      }
+      pub fn all() -> &'static [RecipeType] {
+        &[$(RecipeType::$variant),*]
+      }
+    }
+  };
 }
-impl fmt::Display for RecipeType {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    let category: String = match self {
-      RecipeType::Culinary  => "Culinary".to_string(),
-      RecipeType::Crafted   => "Crafted".to_string(),
-    };
-    write!(f, "{}", category)
-  }
+recipe_types! {
+    Condiment => "Condiment",
+    Crafted   => "Crafted",
+    Culinary  => "Culinary",
+    Pending   => "Pending"
 }
-
 /** Recipe */
 #[derive(Clone)]
 pub struct Recipe {
@@ -62,14 +82,14 @@ pub struct Recipe {
   pub ingredients:  IngredientList,
   pub instructions: String,
 }
-impl fmt::Debug for Recipe {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "\nRecipe: {} [\n{:?}\nInstructions: ({})]", self.name, self.ingredients, self.instructions)
+impl Debug for Recipe {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    write!(f, "[{}] \n\tName: ({})\n\tIngredients: ({})\n\tInstructions: ({})", self.uuid, self.name, self.ingredients, self.instructions)
   }
 }
-impl fmt::Display for Recipe {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "Recipe: {} \n\tInstructions: ({})", self.name, self.instructions)
+impl Display for Recipe {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    write!(f, "{}", self.name)
   }
 }
 impl Recipe {
@@ -93,5 +113,8 @@ impl Recipe {
   }
   pub fn remove_ingredient(&mut self, ingredient: &str) {
     self.ingredients.0.retain(|i| i.name != ingredient);
+  }
+  pub fn set_type(&mut self, new_type: RecipeType) {
+    self.category = new_type;
   }
 }

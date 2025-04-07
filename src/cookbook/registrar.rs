@@ -1,7 +1,13 @@
 
-use super::ingredients::{Ingredient, IngredientList};
-use super::recipes::{Recipe, RecipeList};
+use std::fs;
 use std::io::Result;
+use std::path::PathBuf;
+
+use crate::cookbook::utilz::generate_uuid;
+
+use super::ingredients::{Ingredient, IngredientList, IngredientType};
+use super::recipes::{Recipe, RecipeList, RecipeType};
+// use super::utilz::generate_uuid;
 
 pub struct Registry {
   ingredients: IngredientList,
@@ -42,15 +48,38 @@ impl Registry {
     // println!("Cookbook saved to {}", &file_path.display());
     Ok(())
   }
-  pub fn load_from_file(&mut self) -> Result<()> {
-    // let mut file_path: PathBuf = self.file_path.clone();
-    // file_path.push("data");
-    // file_path.push(&self.cookbook_name);
-    // let contents: String = fs::read_to_string(&file_path)?;
+  pub fn load_ingredients_from_file(&mut self, file_path: &PathBuf, ingredient_book_name: &str, ingredientlist: &mut Vec<Ingredient>) -> Result<()> {
+    let mut file_path: PathBuf = file_path.clone();
+    file_path.push(ingredient_book_name);
+    println!("Loading Ingredients from {}", &file_path.display());
 
-    // println!("Loaded Cookbook Contents:\n{}", &contents);
+    let contents: String = fs::read_to_string(&file_path)?;
+    for line in contents.lines().filter(|line| !line.starts_with("name")) {
+      if let Some((name, _category)) = line.split_once(",") {
+        self.add_ingredient(Ingredient::new(&generate_uuid(), IngredientType::Pending, &name));
+      }
+    }
+    ingredientlist.extend(self.ingredients.0.clone());
+    println!("Loaded Ingredients Contents: {}", self.ingredients.0.len());
     Ok(())
   }
+  pub fn load_recipes_from_file(&mut self, file_path: &PathBuf, recipe_book_name: &str, recipelist: &mut Vec<Recipe>) -> Result<()> {
+    let mut file_path: PathBuf = file_path.clone();
+    file_path.push(recipe_book_name);
+    println!("Loading Recipes from {}", &file_path.display());
+
+    let contents: String = fs::read_to_string(&file_path)?;
+
+    for line in contents.lines().filter(|line| !line.starts_with("name")) {
+      if let Some((name, ingredients)) = line.split_once(",") {
+        self.add_recipe(Recipe::new(&generate_uuid(), RecipeType::Pending, &name, &ingredients.replace(";", " ")));
+      }
+    }
+    recipelist.extend(self.recipes.0.clone());
+    println!("Loaded Recipes Contents: {}", self.recipes.0.len());
+    Ok(())
+  }
+
   pub fn load_from_database(&self) -> Result<()> {
     // let mut ip: PathBuf = self.file_path.clone();
     // ip.push("data");

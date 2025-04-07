@@ -1,19 +1,19 @@
-use std::fmt;
+use std::fmt::{Debug, Display, Formatter, Result};
 use std::vec::Vec;
 
 /** IngredientList */
 #[derive(Clone)]
 pub struct IngredientList(pub Vec<Ingredient>);
-impl fmt::Debug for IngredientList {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Debug for IngredientList {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     for ingredient in &self.0 {
       write!(f, "{}", ingredient)?;
     }
     Ok(())
   }
 }
-impl fmt::Display for IngredientList {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+impl Display for IngredientList {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     for ingredient in &self.0 {
       write!(f, "{}", ingredient)?;
     }
@@ -38,25 +38,50 @@ impl IngredientList {
 }
 
 /** IngredientType */
-#[derive(Clone)]
-pub enum IngredientType {
-  Culinary,
-  Protein,
-  Produce,
-  Grain,
-  Craft,
+macro_rules! ingredient_types {
+  ($($variant:ident => $name:expr),*) => {
+    #[derive(Clone, Debug, PartialEq, Eq)]
+    pub enum IngredientType {
+      $($variant),*
+    }
+    impl Display for IngredientType {
+      fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "{}", self.as_str())
+      }
+    }
+    impl IngredientType {
+      pub fn as_str(&self) -> &'static str {
+        match self {
+          $(IngredientType::$variant => $name),*
+        }
+      }
+      pub fn from_str(name: &str) -> Option<Self> {
+        match name {
+          $(x if x.eq_ignore_ascii_case($name) => Some(IngredientType::$variant)),*,
+          _ => None,
+        }
+      }
+      pub fn all() -> &'static [IngredientType] {
+        &[$(IngredientType::$variant),*]
+      }
+    }
+  };
 }
-impl fmt::Display for IngredientType {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    let category: String = match self {
-      IngredientType::Culinary  => "Culinary".to_string(),
-      IngredientType::Protein   => "Protein".to_string(),
-      IngredientType::Produce   => "Produce".to_string(),
-      IngredientType::Grain     => "Grain".to_string(),
-      IngredientType::Craft     => "Craft".to_string(),
-    };
-    write!(f, "{}", category)
-  }
+ingredient_types! {
+  Condiment => "Condiment",
+  Craft     => "Craft",
+  Culinary  => "Culinary",
+  Dairy     => "Dairy",
+  Fat       => "Fat",
+  Fish      => "Fish",
+  Herb      => "Herb",
+  Grain     => "Grain",
+  Meat      => "Meat",
+  Nut       => "Nut",
+  Produce   => "Produce",
+  Seasoning => "Seasoning",
+  Sweetener => "Sweetener",
+  Pending   => "Pending"
 }
 
 /** Ingredient */
@@ -66,14 +91,14 @@ pub struct Ingredient {
   pub category: IngredientType,
   pub name:     String,
 }
-impl fmt::Debug for Ingredient {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "\nIngredient: {} (Category: {})\n", self.name, self.category)
+impl Debug for Ingredient {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    write!(f, "[{}] {} (Category: {})", self.uuid, self.name, self.category)
   }
 }
-impl fmt::Display for Ingredient {
-  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    write!(f, "Ingredient: {} (Category: {})", self.name, self.category)
+impl Display for Ingredient {
+  fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    write!(f, "{}", self.name)
   }
 }
 impl Ingredient {
@@ -83,5 +108,8 @@ impl Ingredient {
       category,
       name:     name.to_string(),
     }
+  }
+  pub fn set_type(&mut self, category: IngredientType) {
+    self.category = category;
   }
 }

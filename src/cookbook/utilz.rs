@@ -19,7 +19,7 @@ pub fn boolean_array(count: usize) -> Vec<bool> {
 pub fn generate_uuid() -> String {
   let mut rng: ThreadRng = rand::thread_rng();
   let mut uuid: String = String::new();
-  for itr in 0..=32 {
+  for itr in 0..32 {
     if (itr == 8 || itr == 12 || itr == 16 || itr == 20) { uuid += "-"; }
     let c: u8 = rng.gen_range(0..=16);
     let ch: char = match c {
