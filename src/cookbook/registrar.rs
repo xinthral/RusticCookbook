@@ -7,6 +7,7 @@ use crate::cookbook::utilz::generate_uuid;
 
 use super::ingredients::{Ingredient, IngredientList, IngredientType};
 use super::recipes::{Recipe, RecipeList, RecipeType};
+use super::queries::SQLiteConnection;
 // use super::utilz::generate_uuid;
 
 pub struct Registry {
@@ -16,7 +17,7 @@ pub struct Registry {
 
 impl Registry {
   pub fn new() -> Self {
-    Registry {
+    Self {
       ingredients: IngredientList::new(),
       recipes: RecipeList::new(),
     }
@@ -79,13 +80,13 @@ impl Registry {
     println!("Loaded Recipes Contents: {}", self.recipes.0.len());
     Ok(())
   }
-
   pub fn load_from_database(&self) -> Result<()> {
-    // let mut ip: PathBuf = self.file_path.clone();
-    // ip.push("data");
-    // ip.push(&self.database_name);
+    let mut ip: PathBuf = self.file_path.clone();
+    ip.push(&database_name);
+    let dbname = ip.file_name().unwrap().to_str().unwrap();
     
-    // println!("Loading ingredients...");
+    println!("Loading ingredients from {}...", dbname);
+    // let db: SQLiteConnection = SQLiteConnection::new(&dbname);
     // let db: SQLiteHandler = SQLiteHandler::new(&self.file_path);
     // db.load_ingredients(&ip.to_string_lossy()).expect("Failed to load ingredients");
     Ok(())

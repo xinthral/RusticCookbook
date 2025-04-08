@@ -11,7 +11,7 @@ fn init_cookbook(data_path: &PathBuf) -> Cookbook {
   Cookbook {
     data_path:        data_path.clone(),
     cookbook_name:    "testbook.ckb".to_string(),
-    database_name:    "testdb.db".to_string(),
+    database_name:    "test.db".to_string(),
     ingredient_book:  "cookbook_i.ckb".to_string(),
     recipe_book:      "cookbook_r.ckb".to_string(),
     ingredients:      Vec::new(),
@@ -30,8 +30,8 @@ fn main() {
 
   let mut cookbook: Cookbook = init_cookbook(&data_path);
   let _ = cookbook.load_from_file();
-
-  cookbook.list_recipes(true);  // List recipes in the cookbook
+  let _ = cookbook.registrar.load_from_database();
+  // cookbook.list_recipes(true);  // List recipes in the cookbook
   // cookbook.list_ingredients(true);  // List ingredients in the cookbook
 
   println!("##### Cookbook Complete! #####\n");
