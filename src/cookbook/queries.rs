@@ -1,9 +1,12 @@
 use rusqlite;// use rusqlite::ToSql;
+// use super::recipes::{Recipe, RecipeList};
+// use super::ingredients::{Ingredient, IngredientList};
 
-pub struct RecipeQuery {}
+// pub struct RecipeQuery {}
 
-pub struct IngredientQuery {}
+// pub struct IngredientQuery {}
 
+#[allow(dead_code)]
 pub struct SQLiteConnection {
   connection: rusqlite::Connection,
 }
@@ -40,6 +43,13 @@ impl SQLiteConnection {
       )",
       [],
     )?;
-    Ok(Self {connection})
+    Ok( Self{connection} )
   }
+  // pub fn load_recipes(&mut self, dbname: &str, recipelist: &mut RecipeList) -> Result<(), rusqlite::Error> {
+  //   Ok(())
+  // }
+  // pub fn load_ingredients(&mut self, dbname: &str, ingredientlist: &mut IngredientList) -> Result<(), rusqlite::Error> {
+  //   Ok(())
+  // }
 }
+

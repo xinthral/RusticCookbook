@@ -6,7 +6,7 @@ use ingredients::Ingredient;
 pub mod recipes;
 use recipes::Recipe;
 pub mod queries;
-use queries::{IngredientQuery, RecipeQuery};
+// use queries::{IngredientQuery, RecipeQuery};
 pub mod registrar;
 use registrar::Registry;
 pub mod utilz;
@@ -20,7 +20,7 @@ pub struct Cookbook {
   pub database_name:    String,
   pub ingredients:      Vec<Ingredient>,
   pub recipes:          Vec<Recipe>,
-  pub registrar:        registrar::Registry,
+  pub registrar:        Registry,
 }
 impl Cookbook {
   pub fn new(data_path: &PathBuf, cookbook_name: &str, ingredient_book: &str, recipe_book: &str, database_name: &str) -> Self {
@@ -75,10 +75,12 @@ impl Cookbook {
     }
   }
   pub fn load_from_file(&mut self) -> Result<(), Box<dyn Error>> {
-    self.registrar
-      .load_ingredients_from_file(&self.data_path, &self.ingredient_book, &mut self.ingredients)?;
-    self.registrar
-      .load_recipes_from_file(&self.data_path, &self.recipe_book, &mut self.recipes)?;
+    self.registrar.load_ingredients_from_file(&self.data_path, &self.ingredient_book, &mut self.ingredients)?;
+    self.registrar.load_recipes_from_file(&self.data_path, &self.recipe_book, &mut self.recipes)?;
+    Ok(())
+  }
+  pub fn load_from_database(&mut self) -> Result<(), Box<dyn Error>> {
+    self.registrar.load_from_database(&self.data_path, &self.database_name)?;
     Ok(())
   }
 }

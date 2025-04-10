@@ -29,10 +29,10 @@ impl Registry {
     self.recipes.add(recipe);
   }
   pub fn display_ingredients(&self) {
-    println!("{}", self.ingredients);
+    println!("{:?}", self.ingredients);
   }
   pub fn display_recipes(&self) {
-    println!("{}", self.recipes);
+    println!("{:?}", self.recipes);
   }
   pub fn save_to_file(&self) -> Result<()> {
     // let mut file_path: PathBuf = self.file_path.clone();
@@ -80,15 +80,15 @@ impl Registry {
     println!("Loaded Recipes Contents: {}", self.recipes.0.len());
     Ok(())
   }
-  pub fn load_from_database(&self) -> Result<()> {
-    let mut ip: PathBuf = self.file_path.clone();
-    ip.push(&database_name);
-    let dbname = ip.file_name().unwrap().to_str().unwrap();
+  pub fn load_from_database(&mut self, file_path: &PathBuf, database_name: &str) -> Result<()> {
+    let mut ip: PathBuf = file_path.clone();
+    ip.push(database_name);
+    let dbname = ip.to_string_lossy();
     
-    println!("Loading ingredients from {}...", dbname);
-    // let db: SQLiteConnection = SQLiteConnection::new(&dbname);
-    // let db: SQLiteHandler = SQLiteHandler::new(&self.file_path);
-    // db.load_ingredients(&ip.to_string_lossy()).expect("Failed to load ingredients");
+    println!("Loading ingredients from [{}]", dbname);
+    // let mut db: SQLiteConnection = SQLiteConnection::new(&dbname).unwrap();
+    let _db: SQLiteConnection = SQLiteConnection::new(&dbname).expect("Failed to connect to database");
+    // db.load_ingredients(&dbname, &mut self.ingredients).expect("Failed to load ingredients");
     Ok(())
   }
   pub fn save_to_database(&self) -> Result<()> {
@@ -97,7 +97,7 @@ impl Registry {
     // ip.push("data");
     // ip.push(&self.database_name);
     // println!("Saving recipes to database...");
-    // // db.flush_to_disk(&ip.to_string_lossy(), &self.recipes).expect("Failed to save recipes");
+    // db.flush_to_disk(&ip.to_string_lossy(), &self.recipes).expect("Failed to save recipes");
     Ok(())
   }
 }

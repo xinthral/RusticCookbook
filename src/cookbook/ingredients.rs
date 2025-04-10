@@ -7,7 +7,7 @@ pub struct IngredientList(pub Vec<Ingredient>);
 impl Debug for IngredientList {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     for ingredient in &self.0 {
-      write!(f, "{}", ingredient)?;
+      write!(f, "[{:width$}] {} :: {}\n", ingredient.uuid, ingredient.name, ingredient.category, width=35)?;
     }
     Ok(())
   }
