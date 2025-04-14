@@ -33,7 +33,7 @@ fn main() {
   let _ = cookbook.load_from_database();
   // cookbook.list_recipes(true);  // List recipes in the cookbook
   // cookbook.list_ingredients(true);  // List ingredients in the cookbook
-  // cookbook.registrar.display_ingredients();  // Display ingredients in the database
+  cookbook.registrar.display_ingredients();  // Display ingredients in the database
   // cookbook.registrar.display_recipes();  // Display ingredients in the database
 
   println!("##### Cookbook Complete! #####\n");

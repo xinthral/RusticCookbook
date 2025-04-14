@@ -1,4 +1,3 @@
-
 use std::fs;
 use std::io::Result;
 use std::path::PathBuf;
@@ -57,6 +56,7 @@ impl Registry {
     let contents: String = fs::read_to_string(&file_path)?;
     for line in contents.lines().filter(|line| !line.starts_with("name")) {
       if let Some((name, _category)) = line.split_once(",") {
+        let itype: IngredientType = 
         self.add_ingredient(Ingredient::new(&generate_uuid(), IngredientType::Pending, &name));
       }
     }
