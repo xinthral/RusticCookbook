@@ -4,8 +4,8 @@ use std::path::PathBuf;
 
 use crate::cookbook::utilz::generate_uuid;
 
-use super::ingredients::{Ingredient, IngredientList, IngredientType};
-use super::recipes::{Recipe, RecipeList, RecipeType};
+use super::ingredients::*;
+use super::recipes::*;
 use super::queries::SQLiteConnection;
 // use super::utilz::generate_uuid;
 
@@ -55,9 +55,10 @@ impl Registry {
 
     let contents: String = fs::read_to_string(&file_path)?;
     for line in contents.lines().filter(|line| !line.starts_with("name")) {
-      if let Some((name, _category)) = line.split_once(",") {
-        let itype: IngredientType = 
-        self.add_ingredient(Ingredient::new(&generate_uuid(), IngredientType::Pending, &name));
+      if let Some((name, category)) = line.split_once(",") {
+        let itype: IngredientType = self.translate_ingredient_category(category);
+
+        self.add_ingredient(Ingredient::new(&generate_uuid(), itype, &name));
       }
     }
     ingredientlist.extend(self.ingredients.0.clone());
@@ -99,5 +100,15 @@ impl Registry {
     // println!("Saving recipes to database...");
     // db.flush_to_disk(&ip.to_string_lossy(), &self.recipes).expect("Failed to save recipes");
     Ok(())
+  }
+  fn translate_ingredient_category(&self, category: &str) -> IngredientType {
+    match category {
+      _ => IngredientType::Pending,
+    }
+  }
+  fn translate_recipe_category(&self, category: &str) -> RecipeType {
+    match category {
+      _ => RecipeType::Pending,
+    }
   }
 }
