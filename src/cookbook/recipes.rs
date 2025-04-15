@@ -93,7 +93,7 @@ pub struct Recipe {
 }
 impl Debug for Recipe {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-    write!(f, "[{}] \n\tName: ({})\n\tIngredients: ({})\n\tInstructions: ({})", self.uuid, self.name, self.ingredients, self.instructions)
+    write!(f, "[{}] \n\tName: ({})\n\tCategory: ({})\n\tIngredients: ({})\n\tInstructions: ({})", self.uuid, self.name, self.category, self.ingredients, self.instructions)
   }
 }
 impl Display for Recipe {

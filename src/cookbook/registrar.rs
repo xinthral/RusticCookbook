@@ -1,7 +1,7 @@
+use std::borrow::Cow;
 use std::fs;
 use std::io::Result;
 use std::path::PathBuf;
-use std::borrow::Cow;
 
 use crate::cookbook::utilz::generate_uuid;
 use super::ingredients::*;
@@ -68,7 +68,6 @@ impl Registry {
     let contents: String = fs::read_to_string(&file_path)?;
     for line in contents.lines().filter(|line| !line.starts_with("name")) {
       if let Some((name, category)) = line.split_once(",") {
-        // FIXME: Parse ingredients and category properly 
         if let Some((category, ingredients)) = category.split_once(",") {
           let rtype: RecipeType = self.translate_recipe_category(category);
           self.add_recipe(Recipe::new(&generate_uuid(), rtype, &name, &ingredients.replace(";", " ")));
@@ -84,18 +83,17 @@ impl Registry {
     ip.push(database_name);
     let dbname: Cow<'_, str> = ip.to_string_lossy();
     println!("Loading ingredients from [{}]", dbname);
-    // let mut db: SQLiteConnection = SQLiteConnection::new(&dbname).unwrap();
     let _db: SQLiteConnection = SQLiteConnection::new(&dbname).expect("Failed to connect to database");
-    // db.load_ingredients(&dbname, &mut self.ingredients).expect("Failed to load ingredients");
     Ok(())
   }
-  pub fn save_to_database(&self) -> Result<()> {
-    // let db: SQLiteHandler = SQLiteHandler::new(&self.file_path);
-    // let mut ip: PathBuf = self.file_path.clone();
-    // ip.push("data");
-    // ip.push(&self.database_name);
-    // println!("Saving recipes to database...");
-    // db.flush_to_disk(&ip.to_string_lossy(), &self.recipes).expect("Failed to save recipes");
+  pub fn save_to_database(&mut self, file_path: &PathBuf, database_name: &str) -> Result<()> {
+    let mut ip: PathBuf = file_path.clone();
+    ip.push(database_name);
+    let dbname: Cow<'_, str> = ip.to_string_lossy();
+    println!("Saving ingredients to [{}]", dbname);
+    let mut db: SQLiteConnection = SQLiteConnection::new(&dbname).expect("Failed to connect to database");
+    let _ = db.store_ingredients(&self.ingredients);
+    let _ = db.store_recipes(&self.recipes);
     Ok(())
   }
   fn translate_ingredient_category(&self, category: &str) -> IngredientType {

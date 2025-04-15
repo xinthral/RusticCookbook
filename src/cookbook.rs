@@ -83,4 +83,8 @@ impl Cookbook {
     self.registrar.load_from_database(&self.data_path, &self.database_name)?;
     Ok(())
   }
+  pub fn save_to_database(&mut self) -> Result<(), Box<dyn Error>> {
+    self.registrar.save_to_database(&self.data_path, &self.database_name)?;
+    Ok(())
+  }
 }
