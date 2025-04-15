@@ -1,9 +1,9 @@
 use std::fs;
 use std::io::Result;
 use std::path::PathBuf;
+use std::borrow::Cow;
 
 use crate::cookbook::utilz::generate_uuid;
-
 use super::ingredients::*;
 use super::recipes::*;
 use super::queries::SQLiteConnection;
@@ -37,13 +37,11 @@ impl Registry {
     // let mut file_path: PathBuf = self.file_path.clone();
     // file_path.push("data");
     // file_path.push(&self.cookbook_name);
-
     // let content = self.recipes
     //   .iter()
     //   .map(|r| r.d0.play())
     //   .collect::<Vec<_>>()
     //   .join("\n\n");
-
     // fs::write(&file_path, content)?;
     // println!("Cookbook saved to {}", &file_path.display());
     Ok(())
@@ -52,12 +50,10 @@ impl Registry {
     let mut file_path: PathBuf = file_path.clone();
     file_path.push(ingredient_book_name);
     println!("Loading Ingredients from {}", &file_path.display());
-
     let contents: String = fs::read_to_string(&file_path)?;
     for line in contents.lines().filter(|line| !line.starts_with("name")) {
       if let Some((name, category)) = line.split_once(",") {
         let itype: IngredientType = self.translate_ingredient_category(category);
-
         self.add_ingredient(Ingredient::new(&generate_uuid(), itype, &name));
       }
     }
@@ -69,12 +65,14 @@ impl Registry {
     let mut file_path: PathBuf = file_path.clone();
     file_path.push(recipe_book_name);
     println!("Loading Recipes from {}", &file_path.display());
-
     let contents: String = fs::read_to_string(&file_path)?;
-
     for line in contents.lines().filter(|line| !line.starts_with("name")) {
-      if let Some((name, ingredients)) = line.split_once(",") {
-        self.add_recipe(Recipe::new(&generate_uuid(), RecipeType::Pending, &name, &ingredients.replace(";", " ")));
+      if let Some((name, category)) = line.split_once(",") {
+        // FIXME: Parse ingredients and category properly 
+        if let Some((category, ingredients)) = category.split_once(",") {
+          let rtype: RecipeType = self.translate_recipe_category(category);
+          self.add_recipe(Recipe::new(&generate_uuid(), rtype, &name, &ingredients.replace(";", " ")));
+        }
       }
     }
     recipelist.extend(self.recipes.0.clone());
@@ -84,8 +82,7 @@ impl Registry {
   pub fn load_from_database(&mut self, file_path: &PathBuf, database_name: &str) -> Result<()> {
     let mut ip: PathBuf = file_path.clone();
     ip.push(database_name);
-    let dbname = ip.to_string_lossy();
-    
+    let dbname: Cow<'_, str> = ip.to_string_lossy();
     println!("Loading ingredients from [{}]", dbname);
     // let mut db: SQLiteConnection = SQLiteConnection::new(&dbname).unwrap();
     let _db: SQLiteConnection = SQLiteConnection::new(&dbname).expect("Failed to connect to database");
@@ -102,13 +99,9 @@ impl Registry {
     Ok(())
   }
   fn translate_ingredient_category(&self, category: &str) -> IngredientType {
-    match category {
-      _ => IngredientType::Pending,
-    }
+    IngredientType::from_str(category).unwrap_or(IngredientType::Pending)
   }
   fn translate_recipe_category(&self, category: &str) -> RecipeType {
-    match category {
-      _ => RecipeType::Pending,
-    }
+    RecipeType::from_str(category).unwrap_or(RecipeType::Pending)
   }
 }

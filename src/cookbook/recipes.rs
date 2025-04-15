@@ -1,5 +1,6 @@
 use super::ingredients::{Ingredient, IngredientList};
 use std::fmt::{Debug, Display, Formatter, Result};
+use strum_macros::EnumIter;
 
 /** RecipeList */
 #[derive(Clone)]
@@ -7,7 +8,7 @@ pub struct RecipeList(pub Vec<Recipe>);
 impl Debug for RecipeList {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     for recipe in &self.0 {
-      write!(f, "[{:width$}] {} :: {}\n", recipe.uuid, recipe.name, recipe.instructions, width=35)?;
+      write!(f, "[{:width$}] {} ({}) :: {}\n", recipe.uuid, recipe.name, recipe.category, recipe.instructions, width=35)?;
     }
     Ok(())
   }
@@ -40,7 +41,7 @@ impl RecipeList {
 /** RecipeType */
 macro_rules! recipe_types {
   ($($variant:ident => $name:expr),*) => {
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    #[derive(Clone, Debug, EnumIter, PartialEq, Eq)]
     pub enum RecipeType {
       $($variant),*
     }
@@ -68,9 +69,17 @@ macro_rules! recipe_types {
   };
 }
 recipe_types! {
-    Condiment => "Condiment",
+    Baked     => "Baked",
+    Boiled    => "Boiled",
+    Brewed    => "Brewed",
     Crafted   => "Crafted",
-    Culinary  => "Culinary",
+    Fried     => "Fried",
+    Grilled   => "Grilled",
+    Mixed     => "Mixed",
+    Roasted   => "Roasted",
+    Sautéed   => "Sautéed",
+    Steamed   => "Steamed",
+    Simmered  => "Simmered",
     Pending   => "Pending"
 }
 /** Recipe */

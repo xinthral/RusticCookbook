@@ -1,5 +1,6 @@
 use std::fmt::{Debug, Display, Formatter, Result};
 use std::vec::Vec;
+use strum_macros::EnumIter;
 
 /** IngredientList */
 #[derive(Clone)]
@@ -7,7 +8,7 @@ pub struct IngredientList(pub Vec<Ingredient>);
 impl Debug for IngredientList {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result {
     for ingredient in &self.0 {
-      write!(f, "[{:width$}] {} :: {}\n", ingredient.uuid, ingredient.name, ingredient.category, width=35)?;
+      write!(f, "[{:width$}] {} ({})\n", ingredient.uuid, ingredient.name, ingredient.category, width=35)?;
     }
     Ok(())
   }
@@ -40,7 +41,7 @@ impl IngredientList {
 /** IngredientType */
 macro_rules! ingredient_types {
   ($($variant:ident => $name:expr),*) => {
-    #[derive(Clone, Debug, PartialEq, Eq)]
+    #[derive(Clone, Debug, EnumIter, PartialEq, Eq)]
     pub enum IngredientType {
       $($variant),*
     }
@@ -74,13 +75,14 @@ ingredient_types! {
   Dairy     => "Dairy",
   Fat       => "Fat",
   Fish      => "Fish",
+  Fruit     => "Fruit",
   Herb      => "Herb",
   Grain     => "Grain",
   Meat      => "Meat",
-  Nut       => "Nut",
-  Produce   => "Produce",
+  Nuts      => "Nuts",
   Seasoning => "Seasoning",
   Sweetener => "Sweetener",
+  Vegetable => "Vegetable",
   Pending   => "Pending"
 }
 
