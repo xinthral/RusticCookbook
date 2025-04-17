@@ -1,0 +1,60 @@
+// Recipe_Name;
+// UUID;
+// Recipe Name;
+// PrepTime(minutes);
+// CookTime(minutes);
+// CookType;
+// CookTemp;
+// Ingredient List: UUID,#,Volume|...;
+// Nested Recipe List: UUID,#,Volume|...;
+// Instruction List: Do thing1, Do thing2, thing3, consume!|...;
+
+Table ingredient {
+  id     integer [primary key, unique]
+  uuid   varchar
+  name   varchar
+  type   varchar
+}
+Table recipe {
+  id        integer [primary key, unique]
+  uuid      varchar
+  name      varchar
+  type      varchar
+  preptime  integer
+  cooktime  integer
+  cooktemp  integer
+}
+Table recipe_ingredient {
+  recipe_uuid     varchar [ref: > recipe.uuid]
+  ingredient_uuid varchar [ref: > ingredient.uuid]
+  amount          varchar
+  unit            varchar
+}
+Table recipe_component {
+  parent_recipe_uuid varchar [ref: > recipe.uuid]
+  child_recipe_uuid  varchar [ref: > recipe.uuid]
+  amount             varchar // optional: "1 cup", "2 tbsp"
+  unit               varchar // optional
+}
+
+SELECT i.*
+FROM recipe r
+JOIN recipe_ingredient ri ON ri.recipe_uuid = r.uuid
+JOIN ingredient i ON i.uuid = ri.ingredient_uuid
+WHERE r.name = 'Chocolate Cake';
+
+
+SELECT child.*
+FROM recipe_component rc
+JOIN recipe parent ON parent.uuid = rc.parent_recipe_uuid
+JOIN recipe child ON child.uuid = rc.child_recipe_uuid
+WHERE parent.name = 'Spaghetti Bolognese';
+
+
+#[derive(Debug)]
+struct RecipeComponent {
+    parent_recipe_uuid: String,
+    child_recipe_uuid: String,
+    amount: Option<String>,
+    unit: Option<String>,
+}
