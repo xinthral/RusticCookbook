@@ -84,7 +84,13 @@ impl Cookbook {
     Ok(())
   }
   pub fn save_to_database(&mut self) -> Result<(), Box<dyn Error>> {
-    self.registrar.save_to_database(&self.data_path, &self.database_name)?;
+    let dbname: &str = &["new_", &self.database_name].concat();
+    self.registrar.save_to_database(&self.data_path, dbname)?;
+    Ok(())
+  }
+  pub fn save_to_disk(&mut self) -> Result<(), Box<dyn Error>> {
+    let dbname: &str = &["new_", &self.ingredient_book].concat();
+    self.registrar.write_ingredients_to_file(&self.data_path, dbname)?;
     Ok(())
   }
 }

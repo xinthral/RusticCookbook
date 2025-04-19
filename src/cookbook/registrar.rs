@@ -96,6 +96,14 @@ impl Registry {
     let _ = db.store_recipes(&self.recipes);
     Ok(())
   }
+  pub fn write_ingredients_to_file(&self, file_path: &PathBuf, ingredient_book_name: &str) -> Result<()> {
+    let mut file_path: PathBuf = file_path.clone();
+    file_path.push(ingredient_book_name);
+    println!("Writing Ingredients to {}", &file_path.display());
+    let content = self.ingredients.0.iter().map(|i| i.to_string()).collect::<Vec<_>>().join("\n");
+    fs::write(&file_path, content)?;
+    Ok(())
+  }
   fn translate_ingredient_category(&self, category: &str) -> IngredientType {
     IngredientType::from_str(category).unwrap_or(IngredientType::Pending)
   }
