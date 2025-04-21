@@ -33,19 +33,6 @@ impl Registry {
   pub fn display_recipes(&self) {
     println!("{:?}", self.recipes);
   }
-  pub fn save_to_file(&self) -> Result<()> {
-    // let mut file_path: PathBuf = self.file_path.clone();
-    // file_path.push("data");
-    // file_path.push(&self.cookbook_name);
-    // let content = self.recipes
-    //   .iter()
-    //   .map(|r| r.d0.play())
-    //   .collect::<Vec<_>>()
-    //   .join("\n\n");
-    // fs::write(&file_path, content)?;
-    // println!("Cookbook saved to {}", &file_path.display());
-    Ok(())
-  }
   pub fn load_ingredients_from_file(&mut self, file_path: &PathBuf, ingredient_book_name: &str, ingredientlist: &mut Vec<Ingredient>) -> Result<()> {
     let mut file_path: PathBuf = file_path.clone();
     file_path.push(ingredient_book_name);
@@ -100,7 +87,24 @@ impl Registry {
     let mut file_path: PathBuf = file_path.clone();
     file_path.push(ingredient_book_name);
     println!("Writing Ingredients to {}", &file_path.display());
-    let content = self.ingredients.0.iter().map(|i| i.to_string()).collect::<Vec<_>>().join("\n");
+    let content = self.ingredients.0.iter()
+      .enumerate()
+      .map(|(s,i)| format!("{},{:?}", s, i))
+      .collect::<Vec<_>>()
+      .join("\n");
+    fs::write(&file_path, content)?;
+    Ok(())
+  }
+  pub fn write_recipes_to_file(&self, file_path: &PathBuf, recipe_book_name: &str) -> Result<()> {
+    let mut file_path: PathBuf = file_path.clone();
+    file_path.push(recipe_book_name);
+    println!("Writing Recipes to {}", &file_path.display());
+    let content = self.recipes.0.iter()
+      .enumerate()
+      .map(|(s, r)| format!("{},{:?}", s + 1, r))
+      .collect::<Vec<_>>()
+      .join("\n");
+
     fs::write(&file_path, content)?;
     Ok(())
   }
